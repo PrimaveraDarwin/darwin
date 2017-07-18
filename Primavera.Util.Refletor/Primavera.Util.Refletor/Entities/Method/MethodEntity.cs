@@ -25,6 +25,7 @@ namespace Primavera.Util.Refletor.Entities
         public List<MethodParameter> Parameters { get; set; }
         public MethodLocation MethodLocation { get; set; }
         public Collection<MethodVariable> Variables { get; }
+        public Collection<MethodException> Exceptions { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodEntity"/> class.
@@ -49,6 +50,23 @@ namespace Primavera.Util.Refletor.Entities
             this.ReturnType = method.MethodReturnType.ReturnType;
             this.ReturnTypeName = GetSystemTypeName(method.MethodReturnType.ReturnType).Replace("`1", "");
             this.HasExceptionHandlers = method.Body.HasExceptionHandlers;
+
+            if (this.HasExceptionHandlers)
+            {
+                foreach(ExceptionHandler exceptionHandler in method.Body.ExceptionHandlers)
+                {
+                    if(exceptionHandler.CatchType != null)
+                    { 
+                        if(exceptionHandler.CatchType.FullName == typeof(Exception).FullName)
+                        {
+                            MethodException methodException = new MethodException();
+                            methodException.TryStart = exceptionHandler.TryStart;
+                            methodException.TryEnd = exceptionHandler.TryEnd;
+                            this.Exceptions.Add(methodException);
+                        }
+                    }
+                }
+            }
 
             foreach (var variable in method.Body.Variables)
             {

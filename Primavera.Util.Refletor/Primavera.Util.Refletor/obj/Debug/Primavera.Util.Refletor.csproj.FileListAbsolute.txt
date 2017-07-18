@@ -14,3 +14,10 @@ C:\prjgit\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Ut
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.exe.config
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.exe
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.exe
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.pdb
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Mono.Cecil.dll
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Mono.Cecil.Mdb.dll
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Mono.Cecil.Pdb.dll
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Mono.Cecil.Rocks.dll
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csprojResolveAssemblyReference.cache
