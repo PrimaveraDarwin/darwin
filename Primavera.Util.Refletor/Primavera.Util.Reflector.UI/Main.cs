@@ -37,13 +37,33 @@ namespace Primavera.Util.Reflector.UI
         {
             txtFilePath.Text = rdbPath.Checked ? FileHelper.GetPath() : FileHelper.GetFile();
         }
-
+        
         /// <summary>
-        /// Handles the TextChanged event of the txtFilePath control.
+        /// Handles the Click event of the btProcess control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void txtFilePath_TextChanged(object sender, EventArgs e)
+        private void btProcess_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.FileTrace(ex.ToString());
+            }
+        }
+        
+        private void txtFilePath_Leave(object sender, EventArgs e)
+        {
+            LoadFilesToListView();
+        }
+
+        /// <summary>
+        /// Loads the files to ListView.
+        /// </summary>
+        private void LoadFilesToListView()
         {
             try
             {
@@ -68,21 +88,5 @@ namespace Primavera.Util.Reflector.UI
             }
         }
 
-        /// <summary>
-        /// Handles the Click event of the btProcess control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void btProcess_Click(object sender, EventArgs e)
-        {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            {
-                LogHelper.FileTrace(ex.ToString());
-            }
-        }
     }
 }
