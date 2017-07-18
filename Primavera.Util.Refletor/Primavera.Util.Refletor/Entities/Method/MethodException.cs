@@ -9,7 +9,16 @@ namespace Primavera.Util.Refletor.Entities
 {
     public class MethodException
     {
-        public Instruction TryEnd { get; set; }
-        public Instruction TryStart { get; set; }
+        public MethodExceptionTry TryEnd { get; set; }
+        public MethodExceptionTry TryStart { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MethodException"/> class.
+        /// </summary>
+        public MethodException()
+        {
+            this.TryStart = new MethodExceptionTry();
+            this.TryEnd = new MethodExceptionTry();
+        }
     }
 }

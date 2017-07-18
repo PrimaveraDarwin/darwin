@@ -12,7 +12,6 @@ C:\prjgit\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Ut
 C:\prjgit\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.exe
 C:\prjgit\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.exe.config
-c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.exe
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.exe
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Primavera.Util.Refletor.pdb
@@ -41,3 +40,7 @@ C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\bin\Debug\Mo
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csprojResolveAssemblyReference.cache
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll

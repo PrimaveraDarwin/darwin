@@ -17,3 +17,12 @@ C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debu
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Main.resources
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Properties.Resources.resources
 C:\prjGithub\Darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.GenerateResource.Cache
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe.config
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe
+c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.pdb
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csprojResolveAssemblyReference.cache
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Main.resources
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Properties.Resources.resources
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.GenerateResource.Cache
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.exe
+c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.pdb

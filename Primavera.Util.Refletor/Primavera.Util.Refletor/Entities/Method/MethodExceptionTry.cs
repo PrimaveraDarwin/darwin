@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Primavera.Util.Refletor.Entities
 {
-    public class MethodLocation
+    public class MethodExceptionTry
     {
-        public string Url { get; set; }
         public int StartLine { get; set; }
         public int EndLine { get; set; }
+        public int StartColumn { get; set; }
+        public int EndColumn { get; set; }
     }
 }

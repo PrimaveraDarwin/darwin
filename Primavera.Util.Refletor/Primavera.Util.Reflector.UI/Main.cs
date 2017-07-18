@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Primavera.Util;
 using Primavera.Util.Refletor.Utils;
 using Primavera.Util.Refletor.Entities;
+using Primavera.Util.Injector;
 
 namespace Primavera.Util.Reflector.UI
 {
@@ -83,8 +84,18 @@ namespace Primavera.Util.Reflector.UI
                 {
                     Decompile decompile = new Decompile();
 
-                    List<ModuleEntity> listModules = new List<ModuleEntity>();
-                    listModules.Add(decompile.DecompileAssembly(item.ToString()));
+                    ModuleEntity moduleEntity = decompile.DecompileAssembly(item.ToString());
+                    foreach(TypeEntity typeEntity in moduleEntity.Types)
+                    {
+                        foreach (MethodEntity methodEntity in typeEntity.Methods)
+                        {
+                            if(methodEntity.Name.ToLower() == "actualiza")
+                            { 
+                                FileInjector fileInjector = new FileInjector();
+                                fileInjector.InjectPreLineOnActualiza(methodEntity);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)

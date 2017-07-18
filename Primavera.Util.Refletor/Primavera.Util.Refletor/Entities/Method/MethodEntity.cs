@@ -21,7 +21,7 @@ namespace Primavera.Util.Refletor.Entities
         public TypeReference ReturnType { get; set; }
         public string ReturnTypeName { get; set; }
         public List<MethodParameter> Parameters { get; set; }
-        public MethodLocation MethodLocation { get; set; }
+        public MethodLocation Location { get; set; }
         public List<MethodVariable> Variables { get; }
         public List<MethodException> Exceptions { get; }
 
@@ -48,6 +48,7 @@ namespace Primavera.Util.Refletor.Entities
             this.Name = method.Name;
             this.ReturnType = method.MethodReturnType.ReturnType;
             this.ReturnTypeName = GetSystemTypeName(method.MethodReturnType.ReturnType).Replace("`1", "");
+
             if (method.Body != null)
             {
                 this.HasExceptionHandlers = method.Body.HasExceptionHandlers;
@@ -62,8 +63,16 @@ namespace Primavera.Util.Refletor.Entities
                         if(exceptionHandler.CatchType.FullName == typeof(Exception).FullName)
                         {
                             MethodException methodException = new MethodException();
-                            methodException.TryStart = exceptionHandler.TryStart;
-                            methodException.TryEnd = exceptionHandler.TryEnd;
+                            methodException.TryStart.StartLine = exceptionHandler.TryStart.SequencePoint.StartLine;
+                            methodException.TryStart.EndLine = exceptionHandler.TryStart.SequencePoint.EndLine;
+                            methodException.TryStart.StartColumn = exceptionHandler.TryStart.SequencePoint.StartColumn;
+                            methodException.TryStart.EndColumn = exceptionHandler.TryStart.SequencePoint.EndColumn;
+
+                            methodException.TryEnd.StartLine = exceptionHandler.TryEnd.SequencePoint.StartLine;
+                            methodException.TryEnd.EndLine = exceptionHandler.TryEnd.SequencePoint.EndLine;
+                            methodException.TryEnd.StartColumn = exceptionHandler.TryEnd.SequencePoint.StartColumn;
+                            methodException.TryEnd.EndColumn = exceptionHandler.TryEnd.SequencePoint.EndColumn;
+
                             this.Exceptions.Add(methodException);
                         }
                     }
@@ -98,7 +107,7 @@ namespace Primavera.Util.Refletor.Entities
                 }
             }
 
-            this.MethodLocation = this.GetLocation(method);
+            this.Location = this.GetLocation(method);
         }
 
         /// <summary>
@@ -130,7 +139,9 @@ namespace Primavera.Util.Refletor.Entities
         private MethodLocation GetLocation(MethodDefinition method)
         {
             if(method.Body != null)
-            { 
+            {
+                Instruction returnInstruction = this.GetReturnInstruction(method);
+
                 foreach (var instruction in method.Body.Instructions)
                 {
                     if (instruction.SequencePoint != null)
@@ -138,13 +149,31 @@ namespace Primavera.Util.Refletor.Entities
                         return new MethodLocation
                         {
                             Url = instruction.SequencePoint.Document.Url,
-                            Line = instruction.SequencePoint.StartLine
+                            StartLine = instruction.SequencePoint.StartLine,
+                            EndLine = returnInstruction.SequencePoint.EndLine
                         };
                     }
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the return instruction.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        private Instruction GetReturnInstruction(MethodDefinition method)
+        {
+            var lastInstruction = method.Body.Instructions.Last();
+
+            while(lastInstruction.SequencePoint == null)
+            {
+                lastInstruction = lastInstruction.Previous;
+            }
+
+            return lastInstruction;
         }
 
         /// <summary>
@@ -167,7 +196,6 @@ namespace Primavera.Util.Refletor.Entities
                     output += Indent(variable.VariableType.Name + " " + GetVariableName(variable) + ";", indentStart) + Environment.NewLine;
                 }
             }
-
 
             // Loop through our instructions as before
             // But this time, we actually want to do something with 
