@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Primavera.Util.Refletor.Helpers
+namespace Primavera.Util.Refletor
 {
     public class InstructionHelper
     {

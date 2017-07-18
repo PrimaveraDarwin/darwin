@@ -1,7 +1,6 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Primavera.Util.Refletor.Entities;
-using Primavera.Util.Refletor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
