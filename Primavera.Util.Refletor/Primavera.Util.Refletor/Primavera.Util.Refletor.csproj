@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Method\MethodEntity.cs" />
+    <Compile Include="Entities\Method\MethodException.cs" />
     <Compile Include="Entities\Method\MethodLocation.cs" />
     <Compile Include="Entities\Method\MethodParameter.cs" />
     <Compile Include="Entities\Method\MethodVariable.cs" />

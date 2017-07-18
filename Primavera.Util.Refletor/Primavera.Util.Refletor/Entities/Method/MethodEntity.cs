@@ -19,18 +19,26 @@ namespace Primavera.Util.Refletor.Entities
         public bool IsAbstract { get; set; }
         public bool IsStatic { get; set; }
         public bool IsConstructor { get; set; }
+        public bool HasExceptionHandlers { get; set; }
         public TypeReference ReturnType { get; set; }
         public string ReturnTypeName { get; set; }
         public List<MethodParameter> Parameters { get; set; }
         public MethodLocation MethodLocation { get; set; }
         public Collection<MethodVariable> Variables { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MethodEntity"/> class.
+        /// </summary>
         public MethodEntity()
         {
             this.Parameters = new List<MethodParameter>();
             this.Variables = new Collection<MethodVariable>();
         }
 
+        /// <summary>
+        /// Sets the method declaration.
+        /// </summary>
+        /// <param name="method">The method.</param>
         public void SetMethodDeclaration(MethodDefinition method)
         {
             this.IsPublic = method.IsPublic;
@@ -40,9 +48,7 @@ namespace Primavera.Util.Refletor.Entities
             this.Name = method.Name;
             this.ReturnType = method.MethodReturnType.ReturnType;
             this.ReturnTypeName = GetSystemTypeName(method.MethodReturnType.ReturnType).Replace("`1", "");
-            var last = method.Body.HasExceptionHandlers;
-            var last1 = method.Body.ExceptionHandlers;
-            //Instruction tryEnd;
+            this.HasExceptionHandlers = method.Body.HasExceptionHandlers;
 
             foreach (var variable in method.Body.Variables)
             {
@@ -72,6 +78,11 @@ namespace Primavera.Util.Refletor.Entities
             this.MethodLocation = this.GetLocation(method);
         }
 
+        /// <summary>
+        /// Gets the name of the system type.
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        /// <returns></returns>
         public string GetSystemTypeName(TypeReference reference)
         {
             // A quick and dirty fix
@@ -88,6 +99,11 @@ namespace Primavera.Util.Refletor.Entities
             return reference.Name;
         }
 
+        /// <summary>
+        /// Gets the location.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
         private MethodLocation GetLocation(MethodDefinition method)
         {
             if(method.Body != null)
