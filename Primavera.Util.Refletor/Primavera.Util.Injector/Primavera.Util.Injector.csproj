@@ -46,7 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Primavera.Util.Refletor\Primavera.Util.Refletor\Primavera.Util.Refletor.csproj">
+    <ProjectReference Include="..\Primavera.Util.Refletor\Primavera.Util.Refletor.csproj">
       <Project>{03e55cda-f58b-42a3-b14e-e60c20478034}</Project>
       <Name>Primavera.Util.Refletor</Name>
     </ProjectReference>

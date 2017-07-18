@@ -1,8 +1,0 @@
-c:\prj_git\Primavera.Util.Injector\bin\Debug\Primavera.Util.Injector.dll
-c:\prj_git\Primavera.Util.Injector\bin\Debug\Primavera.Util.Injector.pdb
-c:\prj_git\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.csprojResolveAssemblyReference.cache
-c:\prj_git\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.dll
-c:\prj_git\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.pdb
-c:\prj_git\Primavera.Util.Injector\bin\Debug\Primavera.Util.Refletor.dll
-c:\prj_git\Primavera.Util.Injector\bin\Debug\Mono.Cecil.dll
-c:\prj_git\Primavera.Util.Injector\bin\Debug\Primavera.Util.Refletor.pdb

@@ -86,7 +86,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Primavera.Util.Injector\Primavera.Util.Injector.csproj">
+    <ProjectReference Include="..\Primavera.Util.Injector\Primavera.Util.Injector.csproj">
       <Project>{74a14b49-bb77-4a59-9a2d-48a11647e91d}</Project>
       <Name>Primavera.Util.Injector</Name>
     </ProjectReference>

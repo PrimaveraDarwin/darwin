@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primavera.Util.Refletor", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primavera.Util.Reflector.UI", "Primavera.Util.Reflector.UI\Primavera.Util.Reflector.UI.csproj", "{18A51924-6492-4E7D-AC5B-EE686A9B4F4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primavera.Util.Injector", "..\Primavera.Util.Injector\Primavera.Util.Injector.csproj", "{74A14B49-BB77-4A59-9A2D-48A11647E91D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primavera.Util.Injector", "Primavera.Util.Injector\Primavera.Util.Injector.csproj", "{74A14B49-BB77-4A59-9A2D-48A11647E91D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
