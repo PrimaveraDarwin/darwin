@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Primavera.Util;
+using Primavera.Util.Refletor.Utils;
+using Primavera.Util.Refletor.Entities;
 
 namespace Primavera.Util.Reflector.UI
 {
@@ -77,7 +79,13 @@ namespace Primavera.Util.Reflector.UI
         {
             try
             {
+                foreach(var item in lstFiles.Items)
+                {
+                    Decompile decompile = new Decompile();
 
+                    List<ModuleEntity> listModules = new List<ModuleEntity>();
+                    listModules.Add(decompile.DecompileAssembly(item.ToString()));
+                }
             }
             catch (Exception ex)
             {

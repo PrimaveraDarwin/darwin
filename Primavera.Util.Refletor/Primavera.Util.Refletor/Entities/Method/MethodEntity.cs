@@ -32,6 +32,7 @@ namespace Primavera.Util.Refletor.Entities
         {
             this.Parameters = new List<MethodParameter>();
             this.Variables = new List<MethodVariable>();
+            this.Exceptions = new List<MethodException>();
         }
 
         /// <summary>
@@ -47,7 +48,10 @@ namespace Primavera.Util.Refletor.Entities
             this.Name = method.Name;
             this.ReturnType = method.MethodReturnType.ReturnType;
             this.ReturnTypeName = GetSystemTypeName(method.MethodReturnType.ReturnType).Replace("`1", "");
-            this.HasExceptionHandlers = method.Body.HasExceptionHandlers;
+            if (method.Body != null)
+            {
+                this.HasExceptionHandlers = method.Body.HasExceptionHandlers;
+            }
 
             if (this.HasExceptionHandlers)
             {
@@ -66,14 +70,17 @@ namespace Primavera.Util.Refletor.Entities
                 }
             }
 
-            foreach (var variable in method.Body.Variables)
-            {
-                if (!string.IsNullOrEmpty(variable.Name))
+            if (method.Body!= null)
+            { 
+                foreach (var variable in method.Body.Variables)
                 {
-                    MethodVariable methodVariable = new MethodVariable();
-                    methodVariable.Type = variable.VariableType.Name;
-                    methodVariable.Name = GetVariableName(variable);
-                    this.Variables.Add(methodVariable);
+                    if (!string.IsNullOrEmpty(variable.Name))
+                    {
+                        MethodVariable methodVariable = new MethodVariable();
+                        methodVariable.Type = variable.VariableType.Name;
+                        methodVariable.Name = GetVariableName(variable);
+                        this.Variables.Add(methodVariable);
+                    }
                 }
             }
 

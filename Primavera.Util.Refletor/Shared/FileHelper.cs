@@ -57,7 +57,7 @@ namespace Primavera.Util
         /// <returns></returns>
         public static List<string> GetAllFilesFromPath(string filePath, string fileFormat, string fileFilter)
         {
-            return (List<string>)Directory.EnumerateFiles(filePath, string.Format("*.{0}", fileFormat), SearchOption.AllDirectories).Where(s => s.Contains(fileFilter));
+            return (List<string>)Directory.EnumerateFiles(filePath, fileFormat, SearchOption.AllDirectories).Where(s => s.Contains(fileFilter)).ToList<String>();
         }
     }
 }

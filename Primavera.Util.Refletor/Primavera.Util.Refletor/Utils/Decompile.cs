@@ -12,6 +12,36 @@ namespace Primavera.Util.Refletor.Utils
 {
     public class Decompile
     {
+        /// <summary>
+        /// Decompiles the assembly in diretory.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="searchPattern">The search pattern.</param>
+        /// <returns></returns>
+        public List<ModuleEntity> DecompileAssemblies(string path, string searchPattern)
+        {
+            if(Directory.Exists(path))
+            { 
+                List<ModuleEntity> listModules = new List<ModuleEntity>();
+
+                foreach (string fileName in Directory.EnumerateFiles(path, searchPattern))
+                {
+                    listModules.Add(this.DecompileAssembly(fileName));
+                }
+
+                return listModules;
+            }
+            else
+            {
+                throw new DirectoryNotFoundException();
+            }
+        }
+
+        /// <summary>
+        /// Decompiles the assembly.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         public ModuleEntity DecompileAssembly(string fileName)
         {
             var readerParameters = new ReaderParameters { ReadSymbols = true };
@@ -35,12 +65,9 @@ namespace Primavera.Util.Refletor.Utils
                             var methods = type.Methods;
                             foreach (var method in methods)
                             {
-                                if(method.Name == "Actualiza")
-                                { 
-                                    MethodEntity methodEntity = new MethodEntity();
-                                    methodEntity.SetMethodDeclaration(method);
-                                    typeEntity.Methods.Add(methodEntity);
-                                }
+                                MethodEntity methodEntity = new MethodEntity();
+                                methodEntity.SetMethodDeclaration(method);
+                                typeEntity.Methods.Add(methodEntity);
                             }
 
                             //// Same goes with Fields, fields are basically just a 
@@ -59,7 +86,11 @@ namespace Primavera.Util.Refletor.Utils
             return moduleEntity;
         }
 
-
+        /// <summary>
+        /// Finds the name of the file.
+        /// </summary>
+        /// <param name="typedef">The typedef.</param>
+        /// <returns></returns>
         public string FindFileName(TypeDefinition typedef)
         {
             foreach (var method in typedef.Methods)
