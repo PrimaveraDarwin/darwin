@@ -1,7 +1,6 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
-using Primavera.Util.Refletor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,6 @@ namespace Primavera.Util.Refletor.Entities
     public class MethodEntity
     {
         public string Name { get; set; }
-
         public bool IsPublic { get; set; }
         public bool IsAbstract { get; set; }
         public bool IsStatic { get; set; }
@@ -24,8 +22,8 @@ namespace Primavera.Util.Refletor.Entities
         public string ReturnTypeName { get; set; }
         public List<MethodParameter> Parameters { get; set; }
         public MethodLocation MethodLocation { get; set; }
-        public Collection<MethodVariable> Variables { get; }
-        public Collection<MethodException> Exceptions { get; }
+        public List<MethodVariable> Variables { get; }
+        public List<MethodException> Exceptions { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodEntity"/> class.
@@ -33,7 +31,7 @@ namespace Primavera.Util.Refletor.Entities
         public MethodEntity()
         {
             this.Parameters = new List<MethodParameter>();
-            this.Variables = new Collection<MethodVariable>();
+            this.Variables = new List<MethodVariable>();
         }
 
         /// <summary>
