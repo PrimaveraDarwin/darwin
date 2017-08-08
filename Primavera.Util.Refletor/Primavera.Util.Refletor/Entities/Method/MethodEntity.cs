@@ -141,6 +141,8 @@ namespace Primavera.Util.Refletor.Entities
             if(method.Body != null)
             {
                 Instruction returnInstruction = this.GetReturnInstruction(method);
+                if (returnInstruction == null)
+                    return null; 
 
                 foreach (var instruction in method.Body.Instructions)
                 {
@@ -168,7 +170,10 @@ namespace Primavera.Util.Refletor.Entities
         {
             var lastInstruction = method.Body.Instructions.Last();
 
-            while(lastInstruction.SequencePoint == null)
+            if (lastInstruction.SequencePoint == null)
+                return null;
+
+            while (lastInstruction.SequencePoint == null)
             {
                 lastInstruction = lastInstruction.Previous;
             }
