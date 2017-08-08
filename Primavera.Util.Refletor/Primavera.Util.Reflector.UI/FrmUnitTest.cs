@@ -38,8 +38,8 @@ namespace Primavera.Util.Reflector.UI
                 string outputPath = TxtDestiny.Text.ToString();
                 System.Diagnostics.Debug.Print(inputPath);
                 // Examples:
-              inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\VndBS100.dll";
-                outputPath = "C:\\Users\\Primavera\\Desktop\\test2";
+            //  inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\VndBS100.dll";
+        //        outputPath = "C:\\Users\\Primavera\\Desktop\\test2";
 
                 var result = inputPath.Substring(inputPath.LastIndexOf('\\') + 1);
                 string bs_name = result.Substring(0, 5);
