@@ -26,3 +26,9 @@ c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primave
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.GenerateResource.Cache
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.exe
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.pdb
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.FrmUnitTest.resources
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe.config
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.pdb
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Interop.Office.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.ResolveComReference.cache

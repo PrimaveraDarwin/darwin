@@ -1,8 +1,11 @@
-﻿using Primavera.Util.Injector.Helpers;
+﻿using Microsoft.Office.Interop.Excel;
+using Primavera.Util.Injector.Helpers;
 using Primavera.Util.Refletor.Entities;
 using Primavera.Util.Refletor.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -11,13 +14,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 
 namespace Primavera.Util.Reflector.UI
 {
+
     public partial class FrmUnitTest : Form
     {
-
         public FrmUnitTest()
         {
             InitializeComponent();
@@ -33,12 +38,12 @@ namespace Primavera.Util.Reflector.UI
                 string outputPath = TxtDestiny.Text.ToString();
                 System.Diagnostics.Debug.Print(inputPath);
                 // Examples:
-                inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\VndBS100.dll";
+              inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\VndBS100.dll";
                 outputPath = "C:\\Users\\Primavera\\Desktop\\test2";
 
                 var result = inputPath.Substring(inputPath.LastIndexOf('\\') + 1);
                 string bs_name = result.Substring(0, 5);
-                System.Diagnostics.Debug.Print(bs_name);
+                //System.Diagnostics.Debug.Print(bs_name);
 
 
                 if (File.Exists(inputPath))
@@ -62,6 +67,7 @@ namespace Primavera.Util.Reflector.UI
                 List<string> used_methods = new List<string>();
                 List<string> actual_params = new List<string>();
                 Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                ArrayList classes = new ArrayList();
                 dictionary.Add("BasBS", "Base");
                 dictionary.Add("VndBS", "Vendas");
 
@@ -84,18 +90,22 @@ namespace Primavera.Util.Reflector.UI
                             tw.WriteLine("using StdBE100;");
                             tw.WriteLine("using Primavera.Framework.Tests;");
                             tw.WriteLine("");
-                            tw.WriteLine("[TestClass]");
-                            tw.WriteLine(string.Format("public class {0}Test : BaseTest", entityTypeName));
+                            tw.WriteLine("namespace Primavera.Bas.Tests");
                             tw.WriteLine("{");
+
+
+                            tw.WriteLine("    [TestClass]");
+                            tw.WriteLine(string.Format("    public class {0}Test : BaseTest", entityTypeName));
+                            classes.Add(entityTypeName);
+                            tw.WriteLine("    {");
 
                             foreach (MethodEntity methodEntity in typeEntity.Methods)
                             {
                                 if (!methodEntity.IsConstructor && methodEntity.IsPublic && !used_methods.Contains(methodEntity.Name))
                                 {
-                                    tw.WriteLine("    [TestMethod]");
-                                    tw.WriteLine("    [DataSource(\"System.Data.Odbc\", \"Dsn=Excel Files;Driver={Microsoft Excel Driver (*.xls)};dbq=|DataDirectory|\\\\DataFiles\\\\" + entityTypeName + "_" + methodEntity.Name + ".xls;defaultdir=.\\\\DataFiles;\", \"Sheet1$\", DataAccessMethod.Sequential)]");
-                                    tw.WriteLine("    public void {0}_{1}()", entityTypeName, methodEntity.Name);
-                                    tw.WriteLine("    {");
+                                    tw.WriteLine($"        [Ignore, TestMethod, DataSource(BaseUtils.XMLPROVIDER, UtilsBAS.FILE_XML_{entityTypeName.ToUpper()}, BaseUtils.TABLE, BaseUtils.DATAACCESS)]");
+                                    tw.WriteLine("        public void {0}_{1}()", entityTypeName, methodEntity.Name);
+                                    tw.WriteLine("        {");                                    
 
                                     ///////////////////
 
@@ -103,8 +113,8 @@ namespace Primavera.Util.Reflector.UI
 
                                     foreach (MethodParameter atr in methodEntity.Parameters)
                                     {
-                                        System.Diagnostics.Debug.Print(processa_tipos(atr));
-                                        tw.WriteLine(processa_tipos(atr));
+                                        //System.Diagnostics.Debug.Print(processa_tipos(atr));
+                                        tw.WriteLine("    " + processa_tipos(atr));
                                         call += (atr.ParameterType.IsByReference ? "ref " : string.Empty) + atr.Name + ",";
                                     }
                                     
@@ -113,22 +123,25 @@ namespace Primavera.Util.Reflector.UI
 
                                     call += ");\n";
 
-                                    System.Diagnostics.Debug.Print(string.Format("        MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
-                                    tw.WriteLine(string.Format("\n        MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
-                                    tw.WriteLine("        // Insert your assert here!");
+                                    //System.Diagnostics.Debug.Print(string.Format("             MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
+                                    tw.WriteLine(string.Format("\n            MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
+                                    tw.WriteLine("            // Insert your assert here!");
 
                                     ///////////////////
                                    
-                                    tw.WriteLine("    }" + Environment.NewLine);
+                                    tw.WriteLine("        }" + Environment.NewLine);
                                     used_methods.Add(methodEntity.Name);
                                 }
                             }
+                            
                             used_methods.Clear();
+                            tw.WriteLine("    }");
                             tw.WriteLine("}");
                             tw.Close();
                         }
                     }
                 }
+                createBasUtils(classes, outputPath, bs_name);
             }
             catch (Exception ex)
             {
@@ -136,10 +149,13 @@ namespace Primavera.Util.Reflector.UI
             }
         }
 
+
+
+
         private string processa_tipos(MethodParameter atr)
         {
             if (atr.ParameterType.Name.ToLower() == ("object[]") || atr.ParameterType.Name.ToLower() == ("object[]&"))
-                return ($"        dynamic[] {atr.Name} = null;");
+                return ($"        dynamic[] {atr.Name} = null; // Create params array according to implementation of method");
 
             if (atr.ParameterType.Name.ToLower().EndsWith("[]") || atr.ParameterType.Name.ToLower().EndsWith("[]&"))
                 return ($"        {atr.ParameterType.Name.Replace("&","")} {atr.Name} = null;");
@@ -148,38 +164,95 @@ namespace Primavera.Util.Reflector.UI
             {
                 case "string":
                 case "string&":
-                    return ($"        string {atr.Name} = this.TestContext.DataRow[\"{atr.Name}\"].ToString();");
+                    if(atr.Name == "Atributo")
+                        return ($"        string {atr.Name} = GetString(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            string Val{atr.Name} = GetString(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        string {atr.Name} = GetString(\"{atr.Name}\");");
                 case "short":
                 case "short&":
-                    return ($"        short {atr.Name} = short.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        short {atr.Name} = GetShort(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            short Val{atr.Name} = GetShort(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        short {atr.Name} = GetShort(\"{atr.Name}\");");
                 case "int":
                 case "int&":
-                    return ($"        int {atr.Name} = int.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        int {atr.Name} = GetInt(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            int Val{atr.Name} = GetInt(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        int {atr.Name} = GetInt(\"{atr.Name}\");");
                 case "float":
                 case "float&":
-                    return ($"        float {atr.Name} = float.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        float {atr.Name} = GetFloat(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            float Val{atr.Name} = GetFloat(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        float {atr.Name} = GetFloat(\"{atr.Name}\");");
                 case "double":
                 case "double&":
-                    return ($"        double {atr.Name} = double.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        double {atr.Name} = GetDouble(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            double Val{atr.Name} = GetDouble(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        double {atr.Name} = GetDouble(\"{atr.Name}\");");
                 case "long":
                 case "long&":
-                    return ($"        long {atr.Name} = long.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        long {atr.Name} = GetLong(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            long Val{atr.Name} = GetLong(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        long {atr.Name} = GetLong(\"{atr.Name}\");");
                 case "boolean":
                 case "boolean&":
-                    return ($"        bool {atr.Name} = bool.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        bool {atr.Name} = GetBool(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            bool Val{atr.Name} = GetBool(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        bool {atr.Name} = GetBool(\"{atr.Name}\");");
                 case "bool":
                 case "bool&":
-                    return ($"        bool {atr.Name} = bool.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        bool {atr.Name} = GetBool(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            bool Val{atr.Name} = GetBool(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        bool {atr.Name} = GetBool(\"{atr.Name}\");");
                 case "object":
                 case "object&":
-                    return ($"        dynamic {atr.Name} = null;");
+                    return ($"        dynamic {atr.Name} = null; // Create this object on the XML file ");
                 case "datetime":
                 case "datetime&":
-                    return ($"        DateTime {atr.Name} = DateTime.Parse(this.TestContext.DataRow[\"{atr.Name}\"].ToString());");
+                    if (atr.Name == "Atributo")
+                        return ($"        DateTime {atr.Name} = GetDateTime(\"{atr.Name}\");" + Environment.NewLine +
+                        $"            DateTime Val{atr.Name} = GetDateTime(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
+                    else
+                        return ($"        DateTime {atr.Name} = GetDateTime(\"{atr.Name}\");");
 
                 default:
                     return ($"        {atr.ParameterType.Name.Replace("&","")} {atr.Name} = new { atr.ParameterType.Name.Replace("&", "")}();");
             }
+        }
+
+        private void createBasUtils(ArrayList dic, string outputPath, string name)
+        {
+            System.IO.Directory.CreateDirectory(outputPath + "\\DataFiles");
+            dic.Sort();
+            foreach (string file in dic)
+                System.IO.File.WriteAllText(outputPath+$"\\DataFiles\\{file}.xml", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Rows>\r\n  <Row>\r\n  </Row>\r\n</Rows>\n");
+
+            TextWriter tw = new StreamWriter(outputPath + $"\\Utils{name}.cs");
+            tw.WriteLine("using Primavera.Framework.Tests;");
+            tw.WriteLine("");
+            tw.WriteLine("namespace Primavera.Bas.Tests");
+            tw.WriteLine("{");
+            tw.WriteLine("    public static class UtilsBAS");
+            tw.WriteLine("    {");
+            foreach (string filename in dic)
+                tw.WriteLine($"        public const string FILE_XML_{filename.ToUpper()} = BaseUtils.FILES_PATH + \"{filename}.xml\";");
+            tw.WriteLine("    }");
+            tw.WriteLine("}");
+            tw.Close();
         }
 
 

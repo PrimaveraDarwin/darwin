@@ -43,6 +43,7 @@
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="FileInjector.cs" />
     <Compile Include="Helpers\MethodHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

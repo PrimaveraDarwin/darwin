@@ -14,3 +14,12 @@ C:\prj_git\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.U
 C:\prj_git\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.csprojResolveAssemblyReference.cache
 C:\prj_git\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.dll
 C:\prj_git\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.pdb
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.Util.Injector.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.Util.Injector.pdb
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.Util.Refletor.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Mono.Cecil.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.Util.Refletor.pdb
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\bin\Debug\Primavera.Util.Refletor.dll.config
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.csprojResolveAssemblyReference.cache
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Injector\obj\Debug\Primavera.Util.Injector.pdb

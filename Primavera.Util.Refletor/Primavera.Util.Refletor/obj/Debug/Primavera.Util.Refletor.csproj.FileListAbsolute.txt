@@ -44,3 +44,6 @@ c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
 c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
 c:\prj_git\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb
 c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
+C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb

@@ -16,7 +16,7 @@ namespace Primavera.Util.Reflector.UI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Application.Run(new FrmUnitTest());
         }
     }
 }
