@@ -38,23 +38,21 @@ namespace Primavera.Util.Reflector.UI
                 string outputPath = TxtDestiny.Text.ToString();
                 System.Diagnostics.Debug.Print(inputPath);
                 // Examples:
-             // inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\BasBS100.dll";
-             //  outputPath = "C:\\Users\\Primavera\\Desktop\\test2";
+                inputPath = @"C:\prjNET\ERP10\ERP\Mainline\_Bin\VndBS100.dll";
+                outputPath = "C:\\Users\\Primavera\\Desktop\\test2";
 
                 var result = inputPath.Substring(inputPath.LastIndexOf('\\') + 1);
-                string bs_name = result.Substring(0, 5);
+                string bs_name = result.Substring(0, result.Length - 7);
                 //System.Diagnostics.Debug.Print(bs_name);
 
 
                 if (File.Exists(inputPath))
                 {
-                    // This path is a file
                     if (!Directory.Exists(inputPath))
                         System.IO.Directory.CreateDirectory(outputPath);
                 }
                 else if (Directory.Exists(inputPath))
                 {
-                    // This path is a directory
                     throw new NotImplementedException();
                 }
                 else
@@ -70,17 +68,25 @@ namespace Primavera.Util.Reflector.UI
                 ArrayList classes = new ArrayList();
                 dictionary.Add("BasBS", "Base");
                 dictionary.Add("VndBS", "Vendas");
+                dictionary.Add("AdmBS", "Administrador");
+                dictionary.Add("StdPlatBS", "Plataforma");
+                dictionary.Add("ErpBS", "Erp");
 
                 ModuleEntity moduleEntity = decompile.DecompileAssembly(inputPath);
 
                 foreach (TypeEntity typeEntity in moduleEntity.Types)
                 {
-                    if (!typeEntity.Name.Substring(0, 5).Equals(bs_name))
-                        continue;
-                    string entityTypeName = typeEntity.Name.Substring(5);
+                    if (typeEntity.Name.Substring(0, 3).ToLower().Equals("frm"))
+                         continue;
+                    string entityTypeName = typeEntity.Name;
+
+
+
 
                     if (TypeHelper.HasPublicMethods(typeEntity) && entityTypeName.Length > 0)
                     {
+
+
                         if (!File.Exists(outputPath))
                         {
                             TextWriter tw = new StreamWriter(outputPath + "\\" + entityTypeName + "Test.cs");
@@ -90,7 +96,7 @@ namespace Primavera.Util.Reflector.UI
                             tw.WriteLine("using StdBE100;");
                             tw.WriteLine("using Primavera.Framework.Tests;");
                             tw.WriteLine("");
-                            tw.WriteLine("namespace Primavera.Bas.Tests");
+                            tw.WriteLine($"namespace Primavera.{dictionary[bs_name]}.Tests"); // mudar aqui
                             tw.WriteLine("{");
 
 
@@ -101,39 +107,38 @@ namespace Primavera.Util.Reflector.UI
 
                             foreach (MethodEntity methodEntity in typeEntity.Methods)
                             {
+                                System.Diagnostics.Debug.Print(entityTypeName + "  " + methodEntity.Name + " " + !entityTypeName.Substring(0, 3).ToLower().Equals("frm"));
+
                                 if (!methodEntity.IsConstructor && methodEntity.IsPublic && !used_methods.Contains(methodEntity.Name))
                                 {
-                                    tw.WriteLine($"        [Ignore, TestMethod, DataSource(BaseUtils.XMLPROVIDER, UtilsBAS.FILE_XML_{entityTypeName.ToUpper()}, BaseUtils.TABLE, BaseUtils.DATAACCESS)]");
+                                    tw.WriteLine($"        [Ignore, TestMethod, DataSource(BaseUtils.XMLPROVIDER, Utils{bs_name}.FILE_XML_{entityTypeName.ToUpper()}, BaseUtils.TABLE, BaseUtils.DATAACCESS)]");
                                     tw.WriteLine("        public void {0}_{1}()", entityTypeName, methodEntity.Name);
-                                    tw.WriteLine("        {");                                    
-
-                                    ///////////////////
+                                    tw.WriteLine("        {");
 
                                     string call = "(";
 
                                     foreach (MethodParameter atr in methodEntity.Parameters)
                                     {
-                                        //System.Diagnostics.Debug.Print(processa_tipos(atr));
                                         tw.WriteLine("    " + processa_tipos(atr));
                                         call += (atr.ParameterType.IsByReference ? "ref " : string.Empty) + atr.Name + ",";
                                     }
-                                    
+
                                     var index = call.LastIndexOf(',');
                                     if (index >= 0) call = call.Substring(0, index);
 
                                     call += ");\n";
 
-                                    //System.Diagnostics.Debug.Print(string.Format("             MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
-                                    tw.WriteLine(string.Format("\n            MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName, methodEntity.Name, call));
+                                    if(bs_name.Equals("StdPlatBS"))
+                                        tw.WriteLine(string.Format("\n            {0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName.Substring(5), methodEntity.Name, call));
+                                    else
+                                        tw.WriteLine(string.Format("\n            MotorLE.{0}.{1}.{2}{3}", dictionary[bs_name], entityTypeName.Substring(5), methodEntity.Name, call));
                                     tw.WriteLine("            // Insert your assert here!");
 
-                                    ///////////////////
-                                   
                                     tw.WriteLine("        }" + Environment.NewLine);
                                     used_methods.Add(methodEntity.Name);
                                 }
                             }
-                            
+
                             used_methods.Clear();
                             tw.WriteLine("    }");
                             tw.WriteLine("}");
@@ -141,7 +146,7 @@ namespace Primavera.Util.Reflector.UI
                         }
                     }
                 }
-                createBasUtils(classes, outputPath, bs_name);
+                createBasUtils(classes, outputPath, bs_name, dictionary[bs_name]);
             }
             catch (Exception ex)
             {
@@ -158,13 +163,13 @@ namespace Primavera.Util.Reflector.UI
                 return ($"        dynamic[] {atr.Name} = null; // Create params array according to implementation of method");
 
             if (atr.ParameterType.Name.ToLower().EndsWith("[]") || atr.ParameterType.Name.ToLower().EndsWith("[]&"))
-                return ($"        {atr.ParameterType.Name.Replace("&","")} {atr.Name} = null;");
+                return ($"        {atr.ParameterType.Name.Replace("&", "")} {atr.Name} = null;");
 
             switch (atr.ParameterType.Name.ToLower())
             {
                 case "string":
                 case "string&":
-                    if(atr.Name == "Atributo")
+                    if (atr.Name == "Atributo")
                         return ($"        string {atr.Name} = GetString(\"{atr.Name}\");" + Environment.NewLine +
                         $"            string Val{atr.Name} = GetString(\"Val{atr.Name}\"); // Create element in XML file when it's possible (when its not an object)");
                     else
@@ -230,23 +235,23 @@ namespace Primavera.Util.Reflector.UI
                         return ($"        DateTime {atr.Name} = GetDateTime(\"{atr.Name}\");");
 
                 default:
-                    return ($"        {atr.ParameterType.Name.Replace("&","")} {atr.Name} = new { atr.ParameterType.Name.Replace("&", "")}();");
+                    return ($"        {atr.ParameterType.Name.Replace("&", "")} {atr.Name} = new { atr.ParameterType.Name.Replace("&", "")}();");
             }
         }
 
-        private void createBasUtils(ArrayList dic, string outputPath, string name)
+        private void createBasUtils(ArrayList dic, string outputPath, string name, string bs)
         {
             System.IO.Directory.CreateDirectory(outputPath + "\\DataFiles");
             dic.Sort();
             foreach (string file in dic)
-                System.IO.File.WriteAllText(outputPath+$"\\DataFiles\\{file}.xml", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Rows>\r\n  <Row>\r\n  </Row>\r\n</Rows>\n");
+                System.IO.File.WriteAllText(outputPath + $"\\DataFiles\\{file}.xml", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Rows>\r\n  <Row>\r\n  </Row>\r\n</Rows>\n");
 
             TextWriter tw = new StreamWriter(outputPath + $"\\Utils{name}.cs");
             tw.WriteLine("using Primavera.Framework.Tests;");
             tw.WriteLine("");
-            tw.WriteLine("namespace Primavera.Bas.Tests");
+            tw.WriteLine($"namespace Primavera.{bs}.Tests");
             tw.WriteLine("{");
-            tw.WriteLine("    public static class UtilsBAS");
+            tw.WriteLine($"    public static class Utils{name}");
             tw.WriteLine("    {");
             foreach (string filename in dic)
                 tw.WriteLine($"        public const string FILE_XML_{filename.ToUpper()} = BaseUtils.FILES_PATH + \"{filename}.xml\";");
@@ -254,17 +259,14 @@ namespace Primavera.Util.Reflector.UI
             tw.WriteLine("}");
             tw.Close();
         }
-
-
         private void btGetFilePath_Click(object sender, EventArgs e)
         {
             txtFilePath.Text = FileHelper.GetFile();
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             TxtDestiny.Text = FileHelper.GetPath();
-
         }
     }
 }
+
