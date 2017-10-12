@@ -60,21 +60,19 @@ namespace Primavera.Util.Refletor.Entities
                 {
                     if(exceptionHandler.CatchType != null)
                     { 
-                        if(exceptionHandler.CatchType.FullName == typeof(Exception).FullName)
-                        {
-                            MethodException methodException = new MethodException();
-                            methodException.TryStart.StartLine = exceptionHandler.TryStart.SequencePoint.StartLine;
-                            methodException.TryStart.EndLine = exceptionHandler.TryStart.SequencePoint.EndLine;
-                            methodException.TryStart.StartColumn = exceptionHandler.TryStart.SequencePoint.StartColumn;
-                            methodException.TryStart.EndColumn = exceptionHandler.TryStart.SequencePoint.EndColumn;
+                        MethodException methodException = new MethodException();
 
-                            methodException.TryEnd.StartLine = exceptionHandler.TryEnd.SequencePoint.StartLine;
-                            methodException.TryEnd.EndLine = exceptionHandler.TryEnd.SequencePoint.EndLine;
-                            methodException.TryEnd.StartColumn = exceptionHandler.TryEnd.SequencePoint.StartColumn;
-                            methodException.TryEnd.EndColumn = exceptionHandler.TryEnd.SequencePoint.EndColumn;
+                        methodException.TryStart.StartLine = exceptionHandler.TryStart.SequencePoint.StartLine;
+                        methodException.TryStart.EndLine = exceptionHandler.TryStart.SequencePoint.EndLine;
+                        methodException.TryStart.StartColumn = exceptionHandler.TryStart.SequencePoint.StartColumn;
+                        methodException.TryStart.EndColumn = exceptionHandler.TryStart.SequencePoint.EndColumn;
 
-                            this.Exceptions.Add(methodException);
-                        }
+                        methodException.TryEnd.StartLine = exceptionHandler.TryEnd.SequencePoint.StartLine;
+                        methodException.TryEnd.EndLine = exceptionHandler.TryEnd.SequencePoint.EndLine;
+                        methodException.TryEnd.StartColumn = exceptionHandler.TryEnd.SequencePoint.StartColumn;
+                        methodException.TryEnd.EndColumn = exceptionHandler.TryEnd.SequencePoint.EndColumn;
+
+                        this.Exceptions.Add(methodException);
                     }
                 }
             }
@@ -141,8 +139,6 @@ namespace Primavera.Util.Refletor.Entities
             if(method.Body != null)
             {
                 Instruction returnInstruction = this.GetReturnInstruction(method);
-                if (returnInstruction == null)
-                    return null; 
 
                 foreach (var instruction in method.Body.Instructions)
                 {
@@ -169,9 +165,6 @@ namespace Primavera.Util.Refletor.Entities
         private Instruction GetReturnInstruction(MethodDefinition method)
         {
             var lastInstruction = method.Body.Instructions.Last();
-
-            if (lastInstruction.SequencePoint == null)
-                return null;
 
             while (lastInstruction.SequencePoint == null)
             {

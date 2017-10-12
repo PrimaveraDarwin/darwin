@@ -66,8 +66,15 @@ namespace Primavera.Util.Refletor.Utils
                             foreach (var method in methods)
                             {
                                 MethodEntity methodEntity = new MethodEntity();
-                                methodEntity.SetMethodDeclaration(method);
-                                typeEntity.Methods.Add(methodEntity);
+
+                                try
+                                {
+                                    methodEntity.SetMethodDeclaration(method);
+                                    typeEntity.Methods.Add(methodEntity);
+                                }
+                                catch(System.NullReferenceException)
+                                {
+                                }
                             }
 
                             //// Same goes with Fields, fields are basically just a 
