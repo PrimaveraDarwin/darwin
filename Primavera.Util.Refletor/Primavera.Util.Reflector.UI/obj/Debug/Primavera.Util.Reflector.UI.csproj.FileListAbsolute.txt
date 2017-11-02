@@ -32,3 +32,16 @@ C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe
 C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.pdb
 C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Interop.Office.dll
 C:\prjGitHub\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.ResolveComReference.cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csprojResolveAssemblyReference.cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Interop.Microsoft.Office.Core.dll
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.ResolveComReference.cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.FrmUnitTest.resources
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Main.resources
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.Properties.Resources.resources
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.GenerateResource.Cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.csproj.CoreCompileInputs.cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe.config
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.exe
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Reflector.UI.pdb
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.exe
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Reflector.UI\obj\Debug\Primavera.Util.Reflector.UI.pdb

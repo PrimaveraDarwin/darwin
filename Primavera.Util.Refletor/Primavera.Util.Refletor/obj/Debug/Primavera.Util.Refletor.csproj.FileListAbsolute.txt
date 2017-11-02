@@ -47,3 +47,9 @@ c:\prj_git\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.U
 C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
 C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
 C:\prjGitHub\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csproj.CoreCompileInputs.cache
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll
+C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
