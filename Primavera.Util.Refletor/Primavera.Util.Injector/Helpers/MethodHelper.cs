@@ -25,10 +25,10 @@ namespace Primavera.Util.Injector.Helpers
                     methodParameters += parameter.Name + ", ";
                 }
 
-                return "(" + methodParameters.Substring(0, methodParameters.Length - 2) + ")";
+                return methodParameters.Substring(0, methodParameters.Length - 2);
             }
 
-            return "()";
+            return string.Empty;
         }
     }
 }

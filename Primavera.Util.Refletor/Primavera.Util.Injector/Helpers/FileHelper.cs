@@ -51,7 +51,7 @@ namespace Primavera.Util.Injector.Helpers
         /// <param name="position">The position.</param>
         public static void InsertLine(string filename, string line, int position)
         {
-            int linePosition = 1;
+            int linePosition = 0;
             string tempfile = Path.GetTempFileName();
 
             StreamWriter streamWriter = new StreamWriter(tempfile, false, Encoding.GetEncoding("ISO-8859-1"));
@@ -79,6 +79,15 @@ namespace Primavera.Util.Injector.Helpers
             // Delete the temporary file
 
             File.Delete(tempfile);
+        }
+
+        public static void ReplaceText(string fileName, string text, string newText)
+        {
+            var fileText = File.ReadAllText(fileName, Encoding.Default);
+
+            fileText = fileText.Replace(text, newText);
+
+            File.WriteAllText(fileName, fileText, Encoding.Default);
         }
     }
 }

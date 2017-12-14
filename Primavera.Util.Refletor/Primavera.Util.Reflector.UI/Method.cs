@@ -1,70 +1,108 @@
-﻿using System.ComponentModel;
+﻿#region References
+
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Text.RegularExpressions;
 using Primavera.Util.Refletor.Entities;
+
+#endregion
 
 namespace Primavera.Util.Reflector.UI
 {
     public class Method
     {
-        private const string LINE_PREFIX = "// MotorLE.Extensibilidade.";
+        private const string LINE_PREFIX = "m_objErpBSO.Extensibility.TriggerEvent(this, ";
 
-        [Browsable(true)]
-        public bool inject { get; set; }
-        [Browsable(false)]
-        public int id { get; }
-        [Browsable(true)]
-        public string name { get; }
-        [Browsable(true)]
-        public string file { get; }
-        [Browsable(false)]
-        public MethodEntity methodEntity { get; }
-        [Browsable(true)]
-        public string preLine { get; set; }
-        [Browsable(true)]
-        public string posLine { get; set; }
-
-        public Method(int id, string name, string file, MethodEntity methodEntity, bool inject)
+        public Method(string name, string file, MethodEntity methodEntity, bool inject)
         {
-            this.id = id;
             this.name = name;
             this.file = file;
             this.methodEntity = methodEntity;
             this.inject = inject;
         }
 
-        public string GenerateDescription()
+        [Browsable(true)]
+        public bool inject { get; set; }
+
+        [Browsable(true)]
+        public string name { get; }
+
+        [Browsable(true)]
+        public string file { get; }
+
+        [Browsable(false)]
+        public MethodEntity methodEntity { get; }
+
+        public string GenerateFullPosLine(string ModuleName)
         {
-            return this.name + "(" + this.file + ")";
+            return
+                $"{LINE_PREFIX}{GenerateModuleSpecificGetter(ModuleName)}, {GetGeneratedEventVariableClass(name, "DepoisDe")}";
         }
 
-        public string GenerateFullPreLine()
+        public string GenerateFullPreLine(string ModuleName)
         {
-            //return LINE_PREFIX + this.preLine;
-            if (this.name.Equals("Edita"))
-            {
-                return LINE_PREFIX + this.GenerateClassFriendlyName() + ".AntesDeEditar";
-            }
-            else
-            {
-                return LINE_PREFIX + this.GenerateClassFriendlyName() + ".AntesDeGravar";
-            }
+            return
+                $"{LINE_PREFIX}{GenerateModuleSpecificGetter(ModuleName)}, {GetGeneratedEventVariableClass(name, "AntesDe")}";
         }
 
-        public string GenerateFullPosLine()
+        private string GenerateClassFriendlyName(string ModuleName)
         {
-            //return LINE_PREFIX + this.posLine;
-            if (this.name.Equals("Edita"))
-            {
-                return LINE_PREFIX + this.GenerateClassFriendlyName() + ".DepoisDeEditar";
-            }
-            else
-            {
-                return LINE_PREFIX + this.GenerateClassFriendlyName() + ".DepoisDeGravar";
-            }
+            return Regex.Replace(file, $"{ModuleName}(?<name>.*)?\\.cs", "${name}");
         }
 
-        private string GenerateClassFriendlyName()
+        private string GenerateModuleSpecificGetter(string ModuleName)
         {
-            return System.Text.RegularExpressions.Regex.Replace(file, "BasBS(?<name>.*)?\\.cs", "${name}");
+            return $"{ModuleName}.FuncoesComunsBS.ModuloActual";
+        }
+
+        private string GetGeneratedEventVariableClass(string eventName, string beginingString)
+        {
+            var regex =
+                "\\s*public\\s+const\\s+string\\s+([a-zA-Z]+)\\s*\\=\\s*\\\"([a-zA-Z]+)\\\"\\;";
+
+            var processedEventName = GetProcessedEventName(eventName, beginingString);
+            var eventConstantsPath = "C:\\prjNET\\ERP10\\ERP\\Mainline\\Extensibility\\Core\\Extensibility.Constants\\ExtensibilityEvents";
+            foreach (var file in Directory.EnumerateFiles(eventConstantsPath))
+            {
+                foreach (var line in File.ReadAllLines(file))
+                {
+                    var match = Regex.Match(line, regex);
+
+                    if (match.Success)
+                    {
+                        var varName = match.Groups[1].Value;
+                        var varValue = match.Groups[2].Value;
+
+                        if (processedEventName == varValue)
+                        {
+                            return Path.GetFileNameWithoutExtension(file) + "." + varName;
+                        }
+                    }
+
+                }
+            }
+
+            throw new Exception("GetGeneratedEventVariableClass Error");
+        }
+
+        private string GetProcessedEventName(string eventName, string beginingString)
+        {
+            switch (eventName)
+            {
+                case "Actualiza":
+                case "Atualiza": return $"{beginingString}Gravar";
+                case "ActualizaId":
+                case "AtualizaId": return $"{beginingString}GravarId";
+                case "ActualizaID":
+                case "AtualizaID": return $"{beginingString}GravarID";
+
+                case "Edita": return $"{beginingString}Editar";
+                case "EditaId": return $"{beginingString}EditarId";
+                case "EditaID": return $"{beginingString}EditarID";
+
+                default: return string.Empty;
+            }
         }
     }
 }

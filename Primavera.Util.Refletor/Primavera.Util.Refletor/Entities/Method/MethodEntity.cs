@@ -41,6 +41,9 @@ namespace Primavera.Util.Refletor.Entities
         /// <param name="method">The method.</param>
         public void SetMethodDeclaration(MethodDefinition method)
         {
+            if (method.IsConstructor)
+                return;
+
             this.IsPublic = method.IsPublic;
             this.IsStatic = method.IsStatic;
             this.IsAbstract = method.IsAbstract;
@@ -165,7 +168,7 @@ namespace Primavera.Util.Refletor.Entities
         private Instruction GetReturnInstruction(MethodDefinition method)
         {
             var lastInstruction = method.Body.Instructions.Last();
-
+            
             while (lastInstruction.SequencePoint == null)
             {
                 lastInstruction = lastInstruction.Previous;

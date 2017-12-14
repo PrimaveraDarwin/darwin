@@ -1,224 +1,232 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Primavera.Util;
-using Primavera.Util.Refletor.Utils;
-using Primavera.Util.Refletor.Entities;
-using Primavera.Util.Injector;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using MoreLinq;
+using Primavera.Util.Injector;
+using Primavera.Util.Refletor.Entities;
+using Primavera.Util.Refletor.Utils;
+
+#endregion
 
 namespace Primavera.Util.Reflector.UI
 {
     public partial class Main : Form
     {
-        private List<Method> methodsList;
+        private string ModuleName;
+
+        private readonly List<Method> methodsList;
 
         public Main()
         {
-            this.methodsList = new List<Method>();
+            methodsList = new List<Method>();
 
             InitializeComponent();
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the rdbPath control.
+        ///     Handles the Click event of the btGetFilePath control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void rdbPath_CheckedChanged(object sender, EventArgs e)
-        {
-            txtFilePath.AutoCompleteSource = rdbPath.Checked ? AutoCompleteSource.FileSystemDirectories : AutoCompleteSource.FileSystem;
-        }
-
-        /// <summary>
-        /// Handles the Click event of the btGetFilePath control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void btGetFilePath_Click(object sender, EventArgs e)
         {
             txtFilePath.Text = rdbPath.Checked ? FileHelper.GetPath() : FileHelper.GetFile();
         }
 
-        /// <summary>
-        /// Handles the TextChanged event of the txtFilePath control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void txtFilePath_TextChanged(object sender, EventArgs e)
+        private void exactMatchCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            filesDataGridView.Rows.Clear();
-
-            foreach (DataGridViewColumn column in this.filesDataGridView.Columns)
-            {
-                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
-
-            if (!string.IsNullOrEmpty(txtFilePath.Text))
-            {
-                if (rdbPath.Checked)
-                {
-                    var listOfFiles = FileHelper.GetAllFilesFromPath(txtFilePath.Text, txtFileExtension.Text, txtFileFilter.Text);
-
-                    listOfFiles.ForEach(x => filesDataGridView.Rows.Add(bool.TrueString, x));
-                }
-                else
-                {
-                    filesDataGridView.Rows.Add(bool.TrueString, txtFilePath.Text);
-                }
-            }
+            searchMethodsTextBox_TextChanged(sender, e);
         }
 
         /// <summary>
-        /// Handles the Click event of the btProcess control.
+        ///     Handles the Click event of the btProcess control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void injectCodeButton_Click(object sender, EventArgs e)
         {
-            FileInjector fileInjector = new FileInjector();
-            IEnumerable<Method> methodsToInject = methodsList.Where(m => m.inject);
+            var fileInjector = new FileInjector();
+            var methodsToInject = methodsList.Where(m => m.inject).Reverse();
 
-            foreach (Method method in methodsToInject)
+            foreach (var method in methodsToInject)
             {
-                MethodEntity entity = method.methodEntity;
-                string preLine = method.GenerateFullPreLine();
-                string posLine = method.GenerateFullPosLine();
+                var entity = method.methodEntity;
+                var preLine = method.GenerateFullPreLine(ModuleName);
+                var posLine = method.GenerateFullPosLine(ModuleName);
 
                 fileInjector.Inject(entity, preLine, posLine);
             }
 
             if (methodsToInject.Count() > 0)
-            {
-                MessageBox.Show("The code was successufully injected in the selected files.", "Primavera Injector", MessageBoxButtons.OK);
-            }
+                MessageBox.Show("The code was successufully injected in the selected files.", "Primavera Injector",
+                    MessageBoxButtons.OK);
         }
 
         private void loadMethodsButton_Click(object sender, EventArgs e)
         {
-            Decompile decompile = new Decompile();
-            int methodId = 1;
+            var decompile = new Decompile();
 
             methodsList.Clear();
 
             foreach (DataGridViewRow row in filesDataGridView.Rows)
             {
-                string dllFile = row.Cells["File"].Value.ToString();
-                DataGridViewCheckBoxCell loadCheckBox = (DataGridViewCheckBoxCell) row.Cells["Load"];
+                var dllFile = row.Cells["File"].Value.ToString();
+                var loadCheckBox = (DataGridViewCheckBoxCell) row.Cells["Load"];
 
                 if (loadCheckBox.Value == bool.TrueString)
-                {
                     try
                     {
-                        ModuleEntity moduleEntity = decompile.DecompileAssembly(dllFile);
+                        var moduleEntity = decompile.DecompileAssembly(dllFile);
 
 
-                        foreach (TypeEntity typeEntity in moduleEntity.Types)
+                        foreach (var typeEntity in moduleEntity.Types)
                         {
-                            foreach (MethodEntity methodEntity in typeEntity.Methods)
+                            var uniqMethodsList = typeEntity.Methods.DistinctBy(o => o.Name);
+                            var longestParametersMethodList = new List<MethodEntity>();
+
+                            foreach (var method in uniqMethodsList)
                             {
-                                if (methodEntity.Location != null && methodEntity.Exceptions.Count > 0 && (methodEntity.Name.Equals("Actualiza") || methodEntity.Name.Equals("Edita")))
+                                var max = typeEntity.Methods.Where(p => p.Name == method.Name).MaxBy(p => p.Parameters.Count);
+
+                                longestParametersMethodList.Add(max);
+                            }
+
+                            foreach (var methodEntity in longestParametersMethodList)
+                            {
+                                
+
+                                if (methodEntity.Location != null && methodEntity.Exceptions.Count > 0 &&
+                                    (methodEntity.Name.Equals("Atualiza")
+                                     || methodEntity.Name.Equals("AtualizaId")
+                                     || methodEntity.Name.Equals("AtualizaID")
+                                     || methodEntity.Name.Equals("Actualiza")
+                                     || methodEntity.Name.Equals("ActualizaId")
+                                     || methodEntity.Name.Equals("ActualizaID")
+                                     || methodEntity.Name.Equals("Edita")
+                                     || methodEntity.Name.Equals("EditaId")
+                                     || methodEntity.Name.Equals("EditaID")))
                                 {
-                                    string file = Path.GetFileName(methodEntity.Location.Url);
-                                    Method data = new Method(methodId, methodEntity.Name, file, methodEntity, true);
+                                    var file = Path.GetFileName(methodEntity.Location.Url);
+                                    var data = new Method( methodEntity.Name, file, methodEntity, true);
 
                                     methodsList.Add(data);
-                                    methodId++;
                                 }
                             }
                         }
                     }
-                    catch (System.IO.FileNotFoundException ex)
+                    catch (FileNotFoundException ex)
                     {
-                        MessageBox.Show(string.Format("There was an error while decompiling {0}: {1}. This dll will be ignored.", dllFile, ex.Message), "Primavera Injector", MessageBoxButtons.OK);
+                        MessageBox.Show(
+                            string.Format("There was an error while decompiling {0}: {1}. This dll will be ignored.",
+                                dllFile, ex.Message), "Primavera Injector", MessageBoxButtons.OK);
                     }
-                }
             }
 
             populateMethodsGrid();
-            this.tabMain.SelectedIndex = 1;
-        }
-
-        private void populateMethodsGrid()
-        {
-            List<Method> list = new List<Method>();
-
-            this.methodsList.ForEach(m => list.Add(m));
-
-            var bindingList = new BindingList<Method>(list);
-            var source = new BindingSource(bindingList, null);
-
-            methodsGrid.DataSource = source;
-
-            foreach (DataGridViewColumn column in this.methodsGrid.Columns)
-            {
-                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
-        }
-
-        private void searchMethodsTextBox_TextChanged(object sender, EventArgs e)
-        {
-            List<Method> list = new List<Method>();
-            string text = this.searchMethodsTextBox.Text;
-
-            foreach(var method in this.methodsList)
-            {
-                if (this.exactMatchCheckBox.Checked)
-                {
-                    if (method.name.Equals(text))
-                    {
-                        list.Add(method);
-                    }
-                }
-                else
-                {
-                    if (method.name.ToLower().Contains(text.ToLower()))
-                    {
-                        list.Add(method);
-                    }
-                }
-            }
-
-            var bindingList = new BindingList<Method>(list);
-            var source = new BindingSource(bindingList, null);
-
-            methodsGrid.DataSource = source;
-        }
-
-        private void exactMatchCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            this.searchMethodsTextBox_TextChanged(sender, e);
+            tabMain.SelectedIndex = 1;
         }
 
         private void methodsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if ((e.ColumnIndex == 0) && (e.RowIndex >= 0))
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
             {
-                this.methodsGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                methodsGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-                bool value = (bool) this.methodsGrid.CurrentCell.Value;
+                var value = (bool) methodsGrid.CurrentCell.Value;
 
                 if (value)
                 {
-                    DataGridViewCell preLine = this.methodsGrid.CurrentRow.Cells[3];
-                    DataGridViewCell posLine = this.methodsGrid.CurrentRow.Cells[4];
+                    var preLine = methodsGrid.CurrentRow.Cells[3];
+                    var posLine = methodsGrid.CurrentRow.Cells[4];
 
-                    if (String.IsNullOrEmpty(preLine.Value as string))
-                    {
+                    if (string.IsNullOrEmpty(preLine.Value as string))
                         preLine.Value = "AntesActualizar";
-                    }
-                    if (String.IsNullOrEmpty(posLine.Value as string))
-                    {
+                    if (string.IsNullOrEmpty(posLine.Value as string))
                         posLine.Value = "DepoisActualizar";
-                    }
                 }
             }
+        }
+
+        private void populateMethodsGrid()
+        {
+            var list = new List<Method>();
+
+            methodsList.ForEach(m => list.Add(m));
+
+            var bindingList = new BindingList<Method>(list);
+            var source = new BindingSource(bindingList, null);
+
+            methodsGrid.DataSource = source;
+
+            foreach (DataGridViewColumn column in methodsGrid.Columns)
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        }
+
+        /// <summary>
+        ///     Handles the CheckedChanged event of the rdbPath control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void rdbPath_CheckedChanged(object sender, EventArgs e)
+        {
+            txtFilePath.AutoCompleteSource =
+                rdbPath.Checked ? AutoCompleteSource.FileSystemDirectories : AutoCompleteSource.FileSystem;
+        }
+
+        private void searchMethodsTextBox_TextChanged(object sender, EventArgs e)
+        {
+            var list = new List<Method>();
+            var text = searchMethodsTextBox.Text;
+
+            foreach (var method in methodsList)
+                if (exactMatchCheckBox.Checked)
+                {
+                    if (method.name.Equals(text))
+                        list.Add(method);
+                }
+                else
+                {
+                    if (method.name.ToLower().Contains(text.ToLower()))
+                        list.Add(method);
+                }
+
+            var bindingList = new BindingList<Method>(list);
+            var source = new BindingSource(bindingList, null);
+
+            methodsGrid.DataSource = source;
+        }
+
+        /// <summary>
+        ///     Handles the TextChanged event of the txtFilePath control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void txtFilePath_TextChanged(object sender, EventArgs e)
+        {
+            filesDataGridView.Rows.Clear();
+
+            foreach (DataGridViewColumn column in filesDataGridView.Columns)
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            if (!string.IsNullOrEmpty(txtFilePath.Text))
+                if (rdbPath.Checked)
+                {
+                    var listOfFiles =
+                        FileHelper.GetAllFilesFromPath(txtFilePath.Text, txtFileExtension.Text, txtFileFilter.Text);
+
+                    listOfFiles.ForEach(x => filesDataGridView.Rows.Add(bool.TrueString, x));
+
+                    ModuleName = new DirectoryInfo(Path.GetDirectoryName(txtFilePath.Text)).Name;
+                }
+                else
+                {
+                    filesDataGridView.Rows.Add(bool.TrueString, txtFilePath.Text);
+                }
         }
     }
 }
