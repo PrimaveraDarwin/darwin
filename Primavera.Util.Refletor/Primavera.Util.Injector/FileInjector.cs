@@ -57,7 +57,9 @@ namespace Primavera.Util.Injector
                 else
                     methodSignature = "".PadRight(columnToInsert) + text + argsNames + ");" + Environment.NewLine;
 
-                FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 1);
+                FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event",
+                    lineToInsert+1);
+                FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 2);
             }
         }
 
@@ -113,13 +115,14 @@ namespace Primavera.Util.Injector
 
                 if (review)
                 {
-                    //methodSignature = "EXTENSIBILITY_REVIEW" + methodSignature;
                     FileHelper.InsertLine(filepath, "var obj = " + inFrontOfReturn, lineToInsert-1);
+                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert - 1);
                     FileHelper.InsertLine(filepath, methodSignature, lineToInsert);
                     FileHelper.ReplaceText(filepath, fullLine, "return obj;");
                 }
                 else
                 {
+                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert - 1);
                     FileHelper.InsertLine(filepath, methodSignature, lineToInsert);
                 }
                 
