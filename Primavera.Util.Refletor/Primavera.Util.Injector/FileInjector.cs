@@ -22,7 +22,6 @@ namespace Primavera.Util.Injector
             InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
             InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
 
-            
             if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
             {
                 CheckoutFileWithTFS(location.Url);
@@ -47,7 +46,7 @@ namespace Primavera.Util.Injector
             {
                 string filepath = methodEntity.Location.Url;
 
-                int lineToInsert = methodEntity.Exceptions.First().TryStart.StartLine +1;
+                int lineToInsert = methodEntity.Exceptions.First().TryStart.StartLine + 1;
                 int columnToInsert = methodEntity.Exceptions.First().TryStart.StartColumn * 4;
                 string methodSignature;
                 var argsNames = MethodHelper.MethodSignature(methodEntity);
@@ -86,6 +85,15 @@ namespace Primavera.Util.Injector
                 var lines = File.ReadAllLines(filepath);
                 for (int i = lineToInsert; i > exception.TryStart.StartLine; i--)
                 {
+                    if (Regex.Replace(lines[i], @"\s+", "").StartsWith("}"))
+                        continue;
+
+                    if (Regex.Replace(lines[i], @"\s+", "").StartsWith("catch"))
+                        continue;
+
+                    if (Regex.Replace(lines[i], @"\s+", "").StartsWith("{"))
+                        continue;
+
                     if (Regex.Match(lines[i], "\\s*return\\s*\\(").Success || Regex.Match(lines[i], "\\s*return\\s*m_objErpBSO.").Success)
                     {
                         lineToInsert = i;
@@ -97,6 +105,12 @@ namespace Primavera.Util.Injector
                         break;
                     }
                     else if (Regex.Match(lines[i], "\\s*return\\s*\\;").Success)
+                    {
+                        lineToInsert = i;
+
+                        break;
+                    }
+                    else if (!string.IsNullOrEmpty(Regex.Replace(lines[i], @"\s+", "")) && !Regex.Replace(lines[i], @"\s+", "").StartsWith("return"))
                     {
                         lineToInsert = i;
 
@@ -115,15 +129,15 @@ namespace Primavera.Util.Injector
 
                 if (review)
                 {
-                    FileHelper.InsertLine(filepath, "var obj = " + inFrontOfReturn, lineToInsert-1);
-                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert - 1);
-                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert);
+                    FileHelper.InsertLine(filepath, "var obj = " + inFrontOfReturn, lineToInsert);
+                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert+1);
+                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert+2);
                     FileHelper.ReplaceText(filepath, fullLine, "return obj;");
                 }
                 else
                 {
-                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert - 1);
-                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert);
+                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert);
+                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 1);
                 }
                 
             }
