@@ -19,20 +19,25 @@ namespace Primavera.Util.Injector
         {
             MethodLocation location = methodEntity.Location;
 
-            InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
-            InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
 
-            if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
-            {
-                CheckoutFileWithTFS(location.Url);
-                this.InsertPosLine(methodEntity, posLine);
-            }
+            // 1st pass: Comment 2nd Pass
+            //InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
+            //InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
 
-            if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, preLine))
-            {
-                CheckoutFileWithTFS(location.Url);
-                this.InsertPreLine(methodEntity, preLine);
-            }
+            //if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
+            //{
+            //    CheckoutFileWithTFS(location.Url);
+            //    this.InsertPosLine(methodEntity, posLine);
+            //}
+
+            //if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, preLine))
+            //{
+            //    CheckoutFileWithTFS(location.Url);
+            //    this.InsertPreLine(methodEntity, preLine);
+            //}
+
+            // 2nd Pass: Comment 1nd Pass
+            InsertExtensibilityTypeString(location.Url);
         }
 
         /// <summary>
@@ -57,7 +62,7 @@ namespace Primavera.Util.Injector
                     methodSignature = "".PadRight(columnToInsert) + text + argsNames + ");" + Environment.NewLine;
 
                 FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event",
-                    lineToInsert+1);
+                    lineToInsert + 1);
                 FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 2);
             }
         }
@@ -130,8 +135,8 @@ namespace Primavera.Util.Injector
                 if (review)
                 {
                     FileHelper.InsertLine(filepath, "var obj = " + inFrontOfReturn, lineToInsert);
-                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert+1);
-                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert+2);
+                    FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert + 1);
+                    FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 2);
                     FileHelper.ReplaceText(filepath, fullLine, "return obj;");
                 }
                 else
@@ -139,7 +144,7 @@ namespace Primavera.Util.Injector
                     FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event", lineToInsert);
                     FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 1);
                 }
-                
+
             }
         }
 
@@ -164,6 +169,56 @@ namespace Primavera.Util.Injector
             {
                 CheckoutFileWithTFS(filePath);
                 FileHelper.InsertLine(filePath, text, 0);
+            }
+        }
+
+        private void InsertExtensibilityTypeString(string filePath)
+        {
+            var className = "\\s*public\\s+class\\s+(\\S+)";
+            var findOpening = "\\s*\\{";
+            var openingLine = -1;
+            var openingLine2 = -1;
+            var classNameValue = string.Empty;
+
+            var lines = File.ReadAllLines(filePath);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (openingLine == -1)
+                {
+                    if (Regex.Match(lines[i], findOpening).Success)
+                        openingLine = i;
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(classNameValue))
+                    {
+                        if (Regex.Match(lines[i], className).Success)
+                        {
+                            classNameValue = Regex.Match(lines[i], className).Groups[1].Value;
+                        }
+                    }
+                    else
+                    {
+                        if (openingLine2 == -1)
+                        {
+                            if (Regex.Match(lines[i], findOpening).Success)
+                                openingLine2 = i;
+                        }
+                        else
+                        {
+                            //Inject here!
+                            var injectText = $"public string ExtensibilityTypeName = \"{classNameValue}\";";
+
+                            if (!File.ReadAllText(filePath).Contains(injectText))
+                            {
+                                CheckoutFileWithTFS(filePath);
+                                FileHelper.InsertLine(filePath, "\n"+injectText, openingLine2+1);
+                            }
+
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
