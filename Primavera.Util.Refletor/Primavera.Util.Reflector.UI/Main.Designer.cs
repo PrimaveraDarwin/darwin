@@ -32,6 +32,10 @@
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tbpMain = new System.Windows.Forms.TabPage();
             this.grbSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxFirst = new System.Windows.Forms.CheckBox();
+            this.filesDataGridView = new System.Windows.Forms.DataGridView();
+            this.Load = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.loadMethodsButton = new System.Windows.Forms.Button();
             this.txtFileExtension = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -53,18 +57,16 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.filesDataGridView = new System.Windows.Forms.DataGridView();
-            this.Load = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelInjectType = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.tbpMain.SuspendLayout();
             this.grbSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).BeginInit();
             this.methodsTab.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.methodsGrid)).BeginInit();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMain
@@ -91,6 +93,7 @@
             // 
             // grbSettings
             // 
+            this.grbSettings.Controls.Add(this.checkBoxFirst);
             this.grbSettings.Controls.Add(this.filesDataGridView);
             this.grbSettings.Controls.Add(this.loadMethodsButton);
             this.grbSettings.Controls.Add(this.txtFileExtension);
@@ -110,6 +113,42 @@
             this.grbSettings.TabIndex = 0;
             this.grbSettings.TabStop = false;
             this.grbSettings.Text = "Settings";
+            // 
+            // checkBoxFirst
+            // 
+            this.checkBoxFirst.AutoSize = true;
+            this.checkBoxFirst.Location = new System.Drawing.Point(267, 26);
+            this.checkBoxFirst.Name = "checkBoxFirst";
+            this.checkBoxFirst.Size = new System.Drawing.Size(45, 17);
+            this.checkBoxFirst.TabIndex = 22;
+            this.checkBoxFirst.Text = "First";
+            this.checkBoxFirst.UseVisualStyleBackColor = true;
+            // 
+            // filesDataGridView
+            // 
+            this.filesDataGridView.AllowUserToAddRows = false;
+            this.filesDataGridView.AllowUserToDeleteRows = false;
+            this.filesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.filesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Load,
+            this.File});
+            this.filesDataGridView.Location = new System.Drawing.Point(98, 94);
+            this.filesDataGridView.Name = "filesDataGridView";
+            this.filesDataGridView.Size = new System.Drawing.Size(602, 271);
+            this.filesDataGridView.TabIndex = 21;
+            // 
+            // Load
+            // 
+            this.Load.FalseValue = "False";
+            this.Load.HeaderText = "Load";
+            this.Load.Name = "Load";
+            this.Load.TrueValue = "True";
+            // 
+            // File
+            // 
+            this.File.HeaderText = "File";
+            this.File.Name = "File";
+            this.File.ReadOnly = true;
             // 
             // loadMethodsButton
             // 
@@ -233,6 +272,7 @@
             // 
             // methodsTab
             // 
+            this.methodsTab.Controls.Add(this.labelInjectType);
             this.methodsTab.Controls.Add(this.injectCodeButton);
             this.methodsTab.Controls.Add(this.panel1);
             this.methodsTab.Location = new System.Drawing.Point(4, 22);
@@ -325,31 +365,14 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // filesDataGridView
+            // labelInjectType
             // 
-            this.filesDataGridView.AllowUserToAddRows = false;
-            this.filesDataGridView.AllowUserToDeleteRows = false;
-            this.filesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.filesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Load,
-            this.File});
-            this.filesDataGridView.Location = new System.Drawing.Point(98, 94);
-            this.filesDataGridView.Name = "filesDataGridView";
-            this.filesDataGridView.Size = new System.Drawing.Size(602, 271);
-            this.filesDataGridView.TabIndex = 21;
-            // 
-            // Load
-            // 
-            this.Load.FalseValue = "False";
-            this.Load.HeaderText = "Load";
-            this.Load.Name = "Load";
-            this.Load.TrueValue = "True";
-            // 
-            // File
-            // 
-            this.File.HeaderText = "File";
-            this.File.Name = "File";
-            this.File.ReadOnly = true;
+            this.labelInjectType.AutoSize = true;
+            this.labelInjectType.Location = new System.Drawing.Point(488, 402);
+            this.labelInjectType.Name = "labelInjectType";
+            this.labelInjectType.Size = new System.Drawing.Size(87, 13);
+            this.labelInjectType.TabIndex = 3;
+            this.labelInjectType.Text = "Tipo de Injeção: ";
             // 
             // Main
             // 
@@ -366,13 +389,14 @@
             this.tbpMain.ResumeLayout(false);
             this.grbSettings.ResumeLayout(false);
             this.grbSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).EndInit();
             this.methodsTab.ResumeLayout(false);
+            this.methodsTab.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.methodsGrid)).EndInit();
             this.pnlHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -406,5 +430,7 @@
         private System.Windows.Forms.DataGridView filesDataGridView;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Load;
         private System.Windows.Forms.DataGridViewTextBoxColumn File;
+        private System.Windows.Forms.CheckBox checkBoxFirst;
+        private System.Windows.Forms.Label labelInjectType;
     }
 }

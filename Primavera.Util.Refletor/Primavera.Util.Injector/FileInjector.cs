@@ -15,29 +15,34 @@ namespace Primavera.Util.Injector
 {
     public class FileInjector
     {
-        public void Inject(MethodEntity methodEntity, string preLine, string posLine)
+        public void Inject(MethodEntity methodEntity, string preLine, string posLine, bool first)
         {
             MethodLocation location = methodEntity.Location;
 
+            if (first)
+            {
+                // 1st pass: Comment 2nd Pass
+                InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
+                InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
 
-            // 1st pass: Comment 2nd Pass
-            //InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
-            //InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
+                if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
+                {
+                    CheckoutFileWithTFS(location.Url);
+                    this.InsertPosLine(methodEntity, posLine);
+                }
 
-            //if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
-            //{
-            //    CheckoutFileWithTFS(location.Url);
-            //    this.InsertPosLine(methodEntity, posLine);
-            //}
+                if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, preLine))
+                {
+                    CheckoutFileWithTFS(location.Url);
+                    this.InsertPreLine(methodEntity, preLine);
+                }
 
-            //if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, preLine))
-            //{
-            //    CheckoutFileWithTFS(location.Url);
-            //    this.InsertPreLine(methodEntity, preLine);
-            //}
-
-            // 2nd Pass: Comment 1nd Pass
-            InsertExtensibilityTypeString(location.Url);
+            }
+            else
+            {
+                // 2nd Pass: Comment 1nd Pass
+                InsertExtensibilityTypeString(location.Url);
+            }
         }
 
         /// <summary>
@@ -207,7 +212,7 @@ namespace Primavera.Util.Injector
                         else
                         {
                             //Inject here!
-                            var injectText = $"public string ExtensibilityTypeName = \"{classNameValue}\";";
+                            var injectText = $"public string ExtensibilityController = \"{classNameValue}\";";
 
                             if (!File.ReadAllText(filePath).Contains(injectText))
                             {

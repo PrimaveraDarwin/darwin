@@ -54,3 +54,10 @@ C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.U
 C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll
 C:\Users\Pedro.Fernandes\source\repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb
 C:\Users\Pedro.Fernandes\Source\Repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csprojResolveAssemblyReference.cache
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll.config
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.dll
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\bin\Primavera.Util.Refletor.pdb
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csprojResolveAssemblyReference.cache
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.csproj.CoreCompileInputs.cache
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.dll
+C:\Users\julio.campos\Source\Repos\darwin\Primavera.Util.Refletor\Primavera.Util.Refletor\obj\Debug\Primavera.Util.Refletor.pdb

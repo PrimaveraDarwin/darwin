@@ -100,6 +100,10 @@ namespace Primavera.Util.Reflector.UI
                 case "Edita": return $"{beginingString}Editar";
                 case "EditaId": return $"{beginingString}EditarId";
                 case "EditaID": return $"{beginingString}EditarID";
+                case "Remove": return $"{beginingString}Anular";
+                case "RemoveId": return $"{beginingString}AnularId";
+                case "RemoveID": return $"{beginingString}AnularID";
+
 
                 default: return string.Empty;
             }

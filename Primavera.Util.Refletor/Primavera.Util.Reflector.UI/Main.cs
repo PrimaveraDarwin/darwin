@@ -26,6 +26,8 @@ namespace Primavera.Util.Reflector.UI
             methodsList = new List<Method>();
 
             InitializeComponent();
+
+            checkBoxFirst.Checked = true;
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Primavera.Util.Reflector.UI
                 var preLine = method.GenerateFullPreLine(ModuleName);
                 var posLine = method.GenerateFullPosLine(ModuleName);
 
-                fileInjector.Inject(entity, preLine, posLine);
+                fileInjector.Inject(entity, preLine, posLine,checkBoxFirst.Checked);
             }
 
             if (methodsToInject.Count() > 0)
@@ -72,6 +74,8 @@ namespace Primavera.Util.Reflector.UI
             var decompile = new Decompile();
 
             methodsList.Clear();
+
+           
 
             foreach (DataGridViewRow row in filesDataGridView.Rows)
             {
@@ -109,7 +113,10 @@ namespace Primavera.Util.Reflector.UI
                                      || methodEntity.Name.Equals("ActualizaID")
                                      || methodEntity.Name.Equals("Edita")
                                      || methodEntity.Name.Equals("EditaId")
-                                     || methodEntity.Name.Equals("EditaID")))
+                                     || methodEntity.Name.Equals("EditaID")
+                                     || methodEntity.Name.Equals("Remove")
+                                     || methodEntity.Name.Equals("RemoveID")
+                                     || methodEntity.Name.Equals("RemoveId")))
                                 {
                                     var file = Path.GetFileName(methodEntity.Location.Url);
                                     var data = new Method( methodEntity.Name, file, methodEntity, true);
@@ -129,6 +136,14 @@ namespace Primavera.Util.Reflector.UI
 
             populateMethodsGrid();
             tabMain.SelectedIndex = 1;
+            if (checkBoxFirst.Checked)
+            {
+                labelInjectType.Text = "Tipo de Injeção 1º Passagem";
+            }else
+            {
+                labelInjectType.Text = "Tipo de Injeção 2º Passagem";
+
+            }
         }
 
         private void methodsGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -228,5 +243,6 @@ namespace Primavera.Util.Reflector.UI
                     filesDataGridView.Rows.Add(bool.TrueString, txtFilePath.Text);
                 }
         }
+
     }
 }
