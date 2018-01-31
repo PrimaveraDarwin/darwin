@@ -62,7 +62,7 @@ namespace Primavera.Util.Reflector.UI
                 "\\s*public\\s+const\\s+string\\s+([a-zA-Z]+)\\s*\\=\\s*\\\"([a-zA-Z]+)\\\"\\;";
 
             var processedEventName = GetProcessedEventName(eventName, beginingString);
-            var eventConstantsPath = "C:\\prjNET\\ERP10\\ERP\\Mainline\\Extensibility\\Core\\Extensibility.Constants\\ExtensibilityEvents";
+            var eventConstantsPath = "C:\\prjNET\\ERP10\\ERP\\Mainline\\Extensibility\\Core\\Extensibility.Constants\\ExtensibilityEvents.cs";
             foreach (var file in Directory.EnumerateFiles(eventConstantsPath))
             {
                 foreach (var line in File.ReadAllLines(file))
