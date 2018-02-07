@@ -36,14 +36,28 @@ namespace Primavera.Util.Reflector.UI
 
         public string GenerateFullPosLine(string ModuleName)
         {
-            return
+            string generatedEvent = GetGeneratedEventVariableClass(name, "DepoisDe");
+
+            if (!string.IsNullOrEmpty(generatedEvent))
+            {
+                return
                 $"{LINE_PREFIX}{GenerateModuleSpecificGetter(ModuleName)}, {GetGeneratedEventVariableClass(name, "DepoisDe")}";
+            }
+
+            return string.Empty;
         }
 
         public string GenerateFullPreLine(string ModuleName)
         {
-            return
-                $"{LINE_PREFIX}{GenerateModuleSpecificGetter(ModuleName)}, {GetGeneratedEventVariableClass(name, "AntesDe")}";
+            string generatedEvent = GetGeneratedEventVariableClass(name, "AntesDe");
+
+            if (!string.IsNullOrEmpty(generatedEvent))
+            {
+                return
+                    $"{LINE_PREFIX}{GenerateModuleSpecificGetter(ModuleName)}, {GetGeneratedEventVariableClass(name, "AntesDe")}";
+            }
+
+            return string.Empty;
         }
 
         private string GenerateClassFriendlyName(string ModuleName)
@@ -63,43 +77,69 @@ namespace Primavera.Util.Reflector.UI
 
             var processedEventName = GetProcessedEventName(eventName, beginingString);
             var eventConstantsPath = "C:\\prjNET\\ERP10\\ERP\\Mainline\\Extensibility\\Core\\Extensibility.Constants\\ExtensibilityEvents.cs";
-            foreach (var file in Directory.EnumerateFiles(eventConstantsPath))
+
+            foreach (var line in File.ReadAllLines(eventConstantsPath))
             {
-                foreach (var line in File.ReadAllLines(file))
+                var match = Regex.Match(line, regex);
+
+                if (match.Success)
                 {
-                    var match = Regex.Match(line, regex);
+                    var varName = match.Groups[1].Value;
+                    var varValue = match.Groups[2].Value;
 
-                    if (match.Success)
+                    if (processedEventName == varValue)
                     {
-                        var varName = match.Groups[1].Value;
-                        var varValue = match.Groups[2].Value;
-
-                        if (processedEventName == varValue)
-                        {
-                            return Path.GetFileNameWithoutExtension(file) + "." + varName;
-                        }
+                        return "ExtensibilityEvents." + varName;
+                        //return Path.GetFileNameWithoutExtension(file) + "." + varName;
                     }
-
                 }
+
             }
 
-            throw new Exception("GetGeneratedEventVariableClass Error");
+            return string.Empty;
+
+            #region Old_Not_Used
+            //foreach (var file in Directory.EnumerateFiles(eventConstantsPath))
+            //{
+            //    foreach (var line in File.ReadAllLines(file))
+            //    {
+            //        var match = Regex.Match(line, regex);
+
+            //        if (match.Success)
+            //        {
+            //            var varName = match.Groups[1].Value;
+            //            var varValue = match.Groups[2].Value;
+
+            //            if (processedEventName == varValue)
+            //            {
+            //                return Path.GetFileNameWithoutExtension(file) + "." + varName;
+            //            }
+            //        }
+
+            //    }
+            //}
+
+            #endregion
+
+
+            //throw new Exception("GetGeneratedEventVariableClass Error");
         }
 
         private string GetProcessedEventName(string eventName, string beginingString)
         {
             switch (eventName)
             {
-                case "Actualiza":
-                case "Atualiza": return $"{beginingString}Gravar";
-                case "ActualizaId":
-                case "AtualizaId": return $"{beginingString}GravarId";
-                case "ActualizaID":
-                case "AtualizaID": return $"{beginingString}GravarID";
+                //case "Actualiza":
+                //case "Atualiza": return $"{beginingString}Gravar";
+                //case "ActualizaId":
+                //case "AtualizaId": return $"{beginingString}GravarId";
+                //case "ActualizaID":
+                //case "AtualizaID": return $"{beginingString}GravarID";
 
-                case "Edita": return $"{beginingString}Editar";
-                case "EditaId": return $"{beginingString}EditarId";
-                case "EditaID": return $"{beginingString}EditarID";
+                //case "Edita": return $"{beginingString}Editar";
+                //case "EditaId": return $"{beginingString}EditarId";
+                //case "EditaID": return $"{beginingString}EditarID";
+
                 case "Remove": return $"{beginingString}Anular";
                 case "RemoveId": return $"{beginingString}AnularId";
                 case "RemoveID": return $"{beginingString}AnularID";

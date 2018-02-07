@@ -22,7 +22,7 @@ namespace Primavera.Util.Injector
             if (first)
             {
                 // 1st pass: Comment 2nd Pass
-                InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityEvents;");
+                InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants;");
                 InsertLineAtBegining(location.Url, "using Primavera.Extensibility.Constants.ExtensibilityService;");
 
                 if (!FileHelper.ExistLine(location.Url, location.StartLine, location.EndLine, posLine))
@@ -68,7 +68,10 @@ namespace Primavera.Util.Injector
 
                 FileHelper.InsertLine(filepath, "".PadRight(columnToInsert) + "// Extensibility Service Event",
                     lineToInsert + 1);
+
+
                 FileHelper.InsertLine(filepath, methodSignature, lineToInsert + 2);
+
             }
         }
 
@@ -217,7 +220,7 @@ namespace Primavera.Util.Injector
                             if (!File.ReadAllText(filePath).Contains(injectText))
                             {
                                 CheckoutFileWithTFS(filePath);
-                                FileHelper.InsertLine(filePath, "\n"+injectText, openingLine2+1);
+                                FileHelper.InsertLine(filePath, "\n" + injectText, openingLine2 + 1);
                             }
 
                             break;

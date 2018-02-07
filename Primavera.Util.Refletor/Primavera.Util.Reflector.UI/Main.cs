@@ -61,7 +61,10 @@ namespace Primavera.Util.Reflector.UI
                 var preLine = method.GenerateFullPreLine(ModuleName);
                 var posLine = method.GenerateFullPosLine(ModuleName);
 
-                fileInjector.Inject(entity, preLine, posLine,checkBoxFirst.Checked);
+                if (!string.IsNullOrEmpty(preLine) || !string.IsNullOrEmpty(posLine))
+                {
+                    fileInjector.Inject(entity, preLine, posLine, checkBoxFirst.Checked);
+                }
             }
 
             if (methodsToInject.Count() > 0)
@@ -75,12 +78,12 @@ namespace Primavera.Util.Reflector.UI
 
             methodsList.Clear();
 
-           
+
 
             foreach (DataGridViewRow row in filesDataGridView.Rows)
             {
                 var dllFile = row.Cells["File"].Value.ToString();
-                var loadCheckBox = (DataGridViewCheckBoxCell) row.Cells["Load"];
+                var loadCheckBox = (DataGridViewCheckBoxCell)row.Cells["Load"];
 
                 if (loadCheckBox.Value == bool.TrueString)
                     try
@@ -102,7 +105,7 @@ namespace Primavera.Util.Reflector.UI
 
                             foreach (var methodEntity in longestParametersMethodList)
                             {
-                                
+
 
                                 if (methodEntity.Location != null && methodEntity.Exceptions.Count > 0 &&
                                     (methodEntity.Name.Equals("Atualiza")
@@ -119,7 +122,7 @@ namespace Primavera.Util.Reflector.UI
                                      || methodEntity.Name.Equals("RemoveId")))
                                 {
                                     var file = Path.GetFileName(methodEntity.Location.Url);
-                                    var data = new Method( methodEntity.Name, file, methodEntity, true);
+                                    var data = new Method(methodEntity.Name, file, methodEntity, true);
 
                                     methodsList.Add(data);
                                 }
@@ -139,7 +142,8 @@ namespace Primavera.Util.Reflector.UI
             if (checkBoxFirst.Checked)
             {
                 labelInjectType.Text = "Tipo de Injeção 1º Passagem";
-            }else
+            }
+            else
             {
                 labelInjectType.Text = "Tipo de Injeção 2º Passagem";
 
@@ -152,7 +156,7 @@ namespace Primavera.Util.Reflector.UI
             {
                 methodsGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
-                var value = (bool) methodsGrid.CurrentCell.Value;
+                var value = (bool)methodsGrid.CurrentCell.Value;
 
                 if (value)
                 {
