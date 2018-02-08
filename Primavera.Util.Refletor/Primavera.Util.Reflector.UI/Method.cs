@@ -129,16 +129,16 @@ namespace Primavera.Util.Reflector.UI
         {
             switch (eventName)
             {
-                //case "Actualiza":
-                //case "Atualiza": return $"{beginingString}Gravar";
-                //case "ActualizaId":
-                //case "AtualizaId": return $"{beginingString}GravarId";
-                //case "ActualizaID":
-                //case "AtualizaID": return $"{beginingString}GravarID";
+                case "Actualiza":
+                case "Atualiza": return $"{beginingString}Gravar";
+                case "ActualizaId":
+                case "AtualizaId": return $"{beginingString}GravarId";
+                case "ActualizaID":
+                case "AtualizaID": return $"{beginingString}GravarID";
 
-                //case "Edita": return $"{beginingString}Editar";
-                //case "EditaId": return $"{beginingString}EditarId";
-                //case "EditaID": return $"{beginingString}EditarID";
+                case "Edita": return $"{beginingString}Editar";
+                case "EditaId": return $"{beginingString}EditarId";
+                case "EditaID": return $"{beginingString}EditarID";
 
                 case "Remove": return $"{beginingString}Anular";
                 case "RemoveId": return $"{beginingString}AnularId";

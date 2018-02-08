@@ -59,10 +59,10 @@ namespace Primavera.Util.Refletor.Entities
 
             if (this.HasExceptionHandlers)
             {
-                foreach(ExceptionHandler exceptionHandler in method.Body.ExceptionHandlers)
+                foreach (ExceptionHandler exceptionHandler in method.Body.ExceptionHandlers)
                 {
-                    if(exceptionHandler.CatchType != null)
-                    { 
+                    if (exceptionHandler.CatchType != null)
+                    {
                         MethodException methodException = new MethodException();
 
                         methodException.TryStart.StartLine = exceptionHandler.TryStart.SequencePoint.StartLine;
@@ -80,8 +80,8 @@ namespace Primavera.Util.Refletor.Entities
                 }
             }
 
-            if (method.Body!= null)
-            { 
+            if (method.Body != null)
+            {
                 foreach (var variable in method.Body.Variables)
                 {
                     if (!string.IsNullOrEmpty(variable.Name))
@@ -139,7 +139,7 @@ namespace Primavera.Util.Refletor.Entities
         /// <returns></returns>
         private MethodLocation GetLocation(MethodDefinition method)
         {
-            if(method.Body != null)
+            if (method.Body != null)
             {
                 Instruction returnInstruction = this.GetReturnInstruction(method);
 
@@ -167,14 +167,25 @@ namespace Primavera.Util.Refletor.Entities
         /// <returns></returns>
         private Instruction GetReturnInstruction(MethodDefinition method)
         {
-            var lastInstruction = method.Body.Instructions.Last();
-            
-            while (lastInstruction.SequencePoint == null)
+
+            try
             {
-                lastInstruction = lastInstruction.Previous;
+                var lastInstruction = method.Body.Instructions.Last();
+
+
+                while (lastInstruction.SequencePoint == null)
+                {
+                    lastInstruction = lastInstruction.Previous;
+                }
+
+                return lastInstruction;
+            }
+            catch (Exception)
+            {
+
+                return null;
             }
 
-            return lastInstruction;
         }
 
         /// <summary>
